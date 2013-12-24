@@ -224,10 +224,12 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $guzzle = $this->getGuzzle();
         $client = new Client();
         $client->setClient($guzzle);
+        $client->setProxy('192.168.0.1:80');
         $crawler = $client->request('GET', 'http://www.example.com/');
         $request = $this->historyPlugin->getLastRequest();
         $this->assertEquals(0, $request->getCurlOptions()->get(CURLOPT_MAXREDIRS));
         $this->assertEquals(30, $request->getCurlOptions()->get(CURLOPT_TIMEOUT));
+        $this->assertEquals('192.168.0.1:80', $request->getCurlOptions()->get(CURLOPT_PROXY));
     }
 
     public function testCreatesResponse()

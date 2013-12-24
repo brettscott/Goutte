@@ -36,6 +36,7 @@ class Client extends BaseClient
     protected $headers = array();
     protected $auth = null;
     protected $client;
+    protected $proxy;
 
     public function setClient(GuzzleClientInterface $client)
     {
@@ -79,6 +80,13 @@ class Client extends BaseClient
     public function resetAuth()
     {
         $this->auth = null;
+
+        return $this;
+    }
+
+    public function setProxy($proxy)
+    {
+        $this->proxy = $proxy;
 
         return $this;
     }
@@ -134,6 +142,10 @@ class Client extends BaseClient
 
         if (!$curlOptions->hasKey(CURLOPT_TIMEOUT)) {
             $curlOptions->set(CURLOPT_TIMEOUT, 30);
+        }
+
+        if (!empty($this->proxy)) {
+            $curlOptions->set(CURLOPT_PROXY, $this->proxy);
         }
 
         // Let BrowserKit handle redirects
